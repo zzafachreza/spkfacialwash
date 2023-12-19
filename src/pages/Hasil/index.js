@@ -12,7 +12,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/en';
 import moment from 'moment';
 import 'moment/locale/id';
-import { MyButton, MyGap, MyPicker } from '../../components';
+import { MyButton, MyGap, MyInput, MyPicker } from '../../components';
 
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Share from 'react-native-share';
@@ -33,7 +33,11 @@ export default function Hasil({ navigation, route }) {
 
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
-
+    const [kirim, setKirim] = useState({
+        budget: '',
+        merk: '',
+        usia: ''
+    })
     useEffect(() => {
         // ambil data kategori
         axios.post(apiURL + 'kategori.php').then(res => {
@@ -54,6 +58,11 @@ export default function Hasil({ navigation, route }) {
             `
 <center><h1>HASIL PEMILIHAN FACIAL WASH TERBAIK</h1></center>
 <center><h1>KATEGORI ${kategori.filter(i => i.value == SPK.data_hasil[0].id_kategori)[0].label.toUpperCase()}</h1></center>
+
+<p>Budget : ${new Intl.NumberFormat().format(kirim.budget)}</p>
+<p>Usia : ${kirim.usia} Tahun</p>
+<p>Merek Sabun Muka : ${kirim.merk}</p>
+
         <table width="100%" border="1" style="margin-top:5%;border-collapse:collapse" cellpadding="4">
             <tr style="background:#F2F6FC">
                 <th>No</th>
@@ -140,6 +149,8 @@ export default function Hasil({ navigation, route }) {
             <MyPicker label="Kategori" iconname="options" data={kategori} onValueChange={x => {
                 __getPerhitungan(x)
             }} />
+
+
 
             {!loading && open && <>
 
@@ -262,7 +273,44 @@ export default function Hasil({ navigation, route }) {
                         })}
                     </View>
 
+                    <View style={{
+                        marginTop: 5,
+                        flexDirection: 'row'
+                    }}>
+
+                        <View style={{
+                            flex: 1,
+                            paddingRight: 5
+                        }}>
+                            <MyInput keyboardType='number-pad' label="Budget" iconname="ribbon" onChangeText={x => {
+                                setKirim({
+                                    ...kirim,
+                                    budget: x
+                                })
+                            }} />
+
+                        </View>
+                        <View style={{
+                            flex: 1,
+                            paddingLeft: 5
+                        }}>
+                            <MyInput keyboardType='number-pad' label="Usia (tahun)" iconname="list" onChangeText={x => {
+                                setKirim({
+                                    ...kirim,
+                                    usia: x
+                                })
+                            }} />
+                        </View>
+                    </View>
+                    <MyInput label="Merek Sabun Muka" iconname="options" onChangeText={x => {
+                        setKirim({
+                            ...kirim,
+                            merk: x
+                        })
+                    }} />
                     <MyGap jarak={20} />
+
+
 
                     <MyButton onPress={createPDF} warna={colors.danger} title="Print Hasil Penilaian" Icons="print" />
                 </ScrollView>
