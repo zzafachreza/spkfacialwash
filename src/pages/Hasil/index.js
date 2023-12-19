@@ -58,6 +58,7 @@ export default function Hasil({ navigation, route }) {
             <tr style="background:#F2F6FC">
                 <th>No</th>
                 <th>Kode</th>
+                <th>Gambar</th>
                 <th>Nama Alternatif</th>
                 <th>Nilai</th>
                 <th>Ranking</th>
@@ -70,6 +71,7 @@ export default function Hasil({ navigation, route }) {
             tbody += `<tr>
                 <td style="text-align:center">${index + 1}</td>
                 <td style="text-align:center">${i.kode_alternatif}</td>
+                <td style="text-align:center"><img src="${i.image}" width="50" height="50" /></td>
                 <td style="text-align:center">${i.nama_alternatif}</td>
                 <td style="text-align:center">${parseFloat(i.nilai_saw).toFixed(4)}</td>
                 <td style="text-align:center">${index + 1}</td>
@@ -119,7 +121,7 @@ export default function Hasil({ navigation, route }) {
         axios.post(apiURL + 'perhitungan.php', {
             key: id_kategori
         }).then(res => {
-            // console.log(res.data.data_hasil);
+            console.log(res.data.data_hasil);
             setSPK(res.data);
         }).finally(() => {
             setLoading(false);
@@ -163,22 +165,36 @@ export default function Hasil({ navigation, route }) {
                             <Text style={{
                                 flex: 1,
                                 fontFamily: fonts.secondary[800],
-                                fontSize: 12,
+                                fontSize: 11,
+                                textAlign: 'center',
+                                color: colors.white
+                            }}>Kode</Text>
+                            <Text style={{
+                                flex: 1,
+                                fontFamily: fonts.secondary[800],
+                                fontSize: 11,
+                                textAlign: 'center',
+                                color: colors.white
+                            }}>Gambar</Text>
+                            <Text style={{
+                                flex: 1,
+                                fontFamily: fonts.secondary[800],
+                                fontSize: 11,
                                 textAlign: 'center',
                                 color: colors.white
                             }}>Alternatif</Text>
 
                             <Text style={{
-                                flex: 0.5,
+                                flex: 1,
                                 fontFamily: fonts.secondary[800],
-                                fontSize: 12,
+                                fontSize: 11,
                                 textAlign: 'center',
                                 color: colors.white
                             }}>Nilai SAW</Text>
                             <Text style={{
-                                flex: 0.5,
+                                flex: 1,
                                 fontFamily: fonts.secondary[800],
-                                fontSize: 12,
+                                fontSize: 11,
                                 textAlign: 'center',
                                 color: colors.white
                             }}>Rangking</Text>
@@ -194,34 +210,48 @@ export default function Hasil({ navigation, route }) {
                                     paddingVertical: 2,
                                     borderBottomColor: colors.primary,
                                 }}>
+
+
+                                    <Text style={{
+                                        flex: 1,
+                                        textAlign: 'center',
+                                        fontFamily: fonts.secondary[800],
+                                        fontSize: 11,
+                                        color: colors.primary,
+                                    }}>{aa.kode_alternatif}</Text>
+
                                     <View style={{
                                         flex: 1,
-                                        // justifyContent: 'center',
-                                        // alignItems: 'center'
-                                        paddingHorizontal: 10,
+                                        justifyContent: 'center',
+                                        alignContent: 'center'
                                     }}>
-                                        <Text style={{
-                                            fontFamily: fonts.secondary[800],
-                                            fontSize: 12,
-                                            color: colors.primary,
-                                        }}>{aa.kode_alternatif}</Text>
-                                        <Text style={{
-                                            fontFamily: fonts.secondary[600],
-                                            fontSize: 11,
-                                            color: colors.black,
-                                        }}>{aa.nama_alternatif}</Text>
+                                        <Image source={{
+                                            uri: aa.image
+                                        }} style={{
+                                            width: 50,
+                                            height: 50,
+                                            resizeMode: 'contain'
+                                        }} />
                                     </View>
+
                                     <Text style={{
-                                        flex: 0.4,
+                                        flex: 1,
+                                        textAlign: 'left',
                                         fontFamily: fonts.secondary[600],
-                                        fontSize: 12,
+                                        fontSize: 11,
+                                        color: colors.black,
+                                    }}>{aa.nama_alternatif}</Text>
+
+                                    <Text style={{
+                                        flex: 1,
+                                        fontFamily: fonts.secondary[600],
+                                        fontSize: 11,
                                         textAlign: 'center'
                                     }}>{parseFloat(aa.nilai_saw).toFixed(4)}</Text>
                                     <Text style={{
-                                        flex: 0.4,
+                                        flex: 1,
                                         fontFamily: fonts.secondary[800],
-                                        fontSize: 12,
-
+                                        fontSize: 11,
                                         textAlign: 'center'
                                     }}>{index + 1}</Text>
 

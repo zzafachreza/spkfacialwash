@@ -20,7 +20,7 @@ export const getData = async key => {
 };
 
 
-export const apiURL = 'http://172.20.10.11/spk_facial/api/';
+export const apiURL = 'https://spkfacialwash.okeadmin.com/api/';
 export const MYAPP = 'SPK PEMILIHAN FACIAL WASH METODE SAW';
 
 
