@@ -71,11 +71,12 @@ export default function Hasil({ navigation, route }) {
                 <th>Nama Alternatif</th>
                 <th>Nilai</th>
                 <th>Ranking</th>
+                <th>Harga</th>
              </tr>` ;
 
         let tbody = ``;
 
-        SPK.data_hasil.map((i, index) => {
+        SPK.data_hasil.filter(ii => ii.harga <= parseFloat(kirim.budget * 1.5)).map((i, index) => {
 
             tbody += `<tr>
                 <td style="text-align:center">${index + 1}</td>
@@ -84,6 +85,7 @@ export default function Hasil({ navigation, route }) {
                 <td style="text-align:center">${i.nama_alternatif}</td>
                 <td style="text-align:center">${parseFloat(i.nilai_saw).toFixed(4)}</td>
                 <td style="text-align:center">${index + 1}</td>
+                <td style="text-align:center">${new Intl.NumberFormat().format(i.harga)}</td>
             
             </tr>`
         })
