@@ -34,6 +34,7 @@ export default function Hasil({ navigation, route }) {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [kirim, setKirim] = useState({
+        kategori: '',
         budget: '',
         merk: '',
         usia: ''
@@ -123,12 +124,12 @@ export default function Hasil({ navigation, route }) {
     }
 
 
-    const __getPerhitungan = (id_kategori) => {
+    const __getPerhitungan = () => {
 
 
         setLoading(true);
         axios.post(apiURL + 'perhitungan.php', {
-            key: id_kategori
+            key: kirim.id_kategori
         }).then(res => {
             console.log(res.data.data_hasil);
             setSPK(res.data);
@@ -144,179 +145,191 @@ export default function Hasil({ navigation, route }) {
             flex: 1,
             backgroundColor: colors.white,
             paddingHorizontal: 20,
-            paddingVertical: 10,
+
         }}>
-            <MyPicker label="Kategori" iconname="options" data={kategori} onValueChange={x => {
-                __getPerhitungan(x)
-            }} />
+            <ScrollView showsVerticalScrollIndicator={false} style={{
+                padding: 10,
+                flex: 1,
+            }}>
+                <MyPicker label="Kategori" iconname="options" data={kategori} onValueChange={x => {
+                    setKirim({
+                        ...kirim,
+                        id_kategori: x
+                    })
+                }} />
 
-
-
-            {!loading && open && <>
-
-                <ScrollView showsVerticalScrollIndicator={false} style={{
-                    padding: 10,
-                    flex: 1,
+                <View style={{
+                    marginTop: 5,
+                    flexDirection: 'row'
                 }}>
 
-
-
-                    <Text style={styles.judul}>RANKING {kategori.filter(i => i.value == SPK.data_hasil[0].id_kategori)[0].label.toUpperCase()}</Text>
                     <View style={{
-                        borderWidth: 1,
-                        borderColor: colors.primary,
+                        flex: 1,
+                        paddingRight: 5
                     }}>
+                        <MyInput keyboardType='number-pad' label="Budget" iconname="ribbon" onChangeText={x => {
+                            setKirim({
+                                ...kirim,
+                                budget: x
+                            })
+                        }} />
+
+                    </View>
+                    <View style={{
+                        flex: 1,
+                        paddingLeft: 5
+                    }}>
+                        <MyInput keyboardType='number-pad' label="Usia (tahun)" iconname="list" onChangeText={x => {
+                            setKirim({
+                                ...kirim,
+                                usia: x
+                            })
+                        }} />
+                    </View>
+                </View>
+                <MyInput label="Merek Sabun Muka" iconname="options" onChangeText={x => {
+                    setKirim({
+                        ...kirim,
+                        merk: x
+                    })
+                }} />
+
+                {!open &&
+
+                    <>
+                        <MyGap jarak={20} />
+                        <MyButton title="Lihat Hasil" Icons="search" onPress={__getPerhitungan} />
+                    </>}
+
+
+                {!loading && open &&
+
+
+                    <>
+
+                        <Text style={styles.judul}>RANKING {kategori.filter(i => i.value == SPK.data_hasil[0].id_kategori)[0].label.toUpperCase()}</Text>
                         <View style={{
-                            flexDirection: 'row',
-                            borderBottomWidth: 1,
-                            paddingVertical: 2,
-                            borderBottomColor: colors.primary,
-                            backgroundColor: colors.primary,
+                            borderWidth: 1,
+                            borderColor: colors.primary,
                         }}>
-                            <Text style={{
-                                flex: 1,
-                                fontFamily: fonts.secondary[800],
-                                fontSize: 11,
-                                textAlign: 'center',
-                                color: colors.white
-                            }}>Kode</Text>
-                            <Text style={{
-                                flex: 1,
-                                fontFamily: fonts.secondary[800],
-                                fontSize: 11,
-                                textAlign: 'center',
-                                color: colors.white
-                            }}>Gambar</Text>
-                            <Text style={{
-                                flex: 1,
-                                fontFamily: fonts.secondary[800],
-                                fontSize: 11,
-                                textAlign: 'center',
-                                color: colors.white
-                            }}>Alternatif</Text>
+                            <View style={{
+                                flexDirection: 'row',
+                                borderBottomWidth: 1,
+                                paddingVertical: 2,
+                                borderBottomColor: colors.primary,
+                                backgroundColor: colors.primary,
+                            }}>
+                                <Text style={{
+                                    flex: 1,
+                                    fontFamily: fonts.secondary[800],
+                                    fontSize: 11,
+                                    textAlign: 'center',
+                                    color: colors.white
+                                }}>Kode</Text>
+                                <Text style={{
+                                    flex: 1,
+                                    fontFamily: fonts.secondary[800],
+                                    fontSize: 11,
+                                    textAlign: 'center',
+                                    color: colors.white
+                                }}>Gambar</Text>
+                                <Text style={{
+                                    flex: 1,
+                                    fontFamily: fonts.secondary[800],
+                                    fontSize: 11,
+                                    textAlign: 'center',
+                                    color: colors.white
+                                }}>Alternatif</Text>
 
-                            <Text style={{
-                                flex: 1,
-                                fontFamily: fonts.secondary[800],
-                                fontSize: 11,
-                                textAlign: 'center',
-                                color: colors.white
-                            }}>Nilai SAW</Text>
-                            <Text style={{
-                                flex: 1,
-                                fontFamily: fonts.secondary[800],
-                                fontSize: 11,
-                                textAlign: 'center',
-                                color: colors.white
-                            }}>Rangking</Text>
-                        </View>
+                                <Text style={{
+                                    flex: 1,
+                                    fontFamily: fonts.secondary[800],
+                                    fontSize: 11,
+                                    textAlign: 'center',
+                                    color: colors.white
+                                }}>Nilai SAW</Text>
+                                <Text style={{
+                                    flex: 1,
+                                    fontFamily: fonts.secondary[800],
+                                    fontSize: 11,
+                                    textAlign: 'center',
+                                    color: colors.white
+                                }}>Rangking</Text>
+                            </View>
 
-                        {SPK.data_hasil.map((aa, index) => {
-                            return (
-
-                                <View style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    borderBottomWidth: 1,
-                                    paddingVertical: 2,
-                                    borderBottomColor: colors.primary,
-                                }}>
-
-
-                                    <Text style={{
-                                        flex: 1,
-                                        textAlign: 'center',
-                                        fontFamily: fonts.secondary[800],
-                                        fontSize: 11,
-                                        color: colors.primary,
-                                    }}>{aa.kode_alternatif}</Text>
+                            {SPK.data_hasil.map((aa, index) => {
+                                return (
 
                                     <View style={{
-                                        flex: 1,
-                                        justifyContent: 'center',
-                                        alignContent: 'center'
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        borderBottomWidth: 1,
+                                        paddingVertical: 2,
+                                        borderBottomColor: colors.primary,
                                     }}>
-                                        <Image source={{
-                                            uri: aa.image
-                                        }} style={{
-                                            width: 50,
-                                            height: 50,
-                                            resizeMode: 'contain'
-                                        }} />
+
+
+                                        <Text style={{
+                                            flex: 1,
+                                            textAlign: 'center',
+                                            fontFamily: fonts.secondary[800],
+                                            fontSize: 11,
+                                            color: colors.primary,
+                                        }}>{aa.kode_alternatif}</Text>
+
+                                        <View style={{
+                                            flex: 1,
+                                            justifyContent: 'center',
+                                            alignContent: 'center'
+                                        }}>
+                                            <Image source={{
+                                                uri: aa.image
+                                            }} style={{
+                                                width: 50,
+                                                height: 50,
+                                                resizeMode: 'contain'
+                                            }} />
+                                        </View>
+
+                                        <Text style={{
+                                            flex: 1,
+                                            textAlign: 'left',
+                                            fontFamily: fonts.secondary[600],
+                                            fontSize: 11,
+                                            color: colors.black,
+                                        }}>{aa.nama_alternatif}</Text>
+
+                                        <Text style={{
+                                            flex: 1,
+                                            fontFamily: fonts.secondary[600],
+                                            fontSize: 11,
+                                            textAlign: 'center'
+                                        }}>{parseFloat(aa.nilai_saw).toFixed(4)}</Text>
+                                        <Text style={{
+                                            flex: 1,
+                                            fontFamily: fonts.secondary[800],
+                                            fontSize: 11,
+                                            textAlign: 'center'
+                                        }}>{index + 1}</Text>
+
                                     </View>
 
-                                    <Text style={{
-                                        flex: 1,
-                                        textAlign: 'left',
-                                        fontFamily: fonts.secondary[600],
-                                        fontSize: 11,
-                                        color: colors.black,
-                                    }}>{aa.nama_alternatif}</Text>
 
-                                    <Text style={{
-                                        flex: 1,
-                                        fontFamily: fonts.secondary[600],
-                                        fontSize: 11,
-                                        textAlign: 'center'
-                                    }}>{parseFloat(aa.nilai_saw).toFixed(4)}</Text>
-                                    <Text style={{
-                                        flex: 1,
-                                        fontFamily: fonts.secondary[800],
-                                        fontSize: 11,
-                                        textAlign: 'center'
-                                    }}>{index + 1}</Text>
-
-                                </View>
-
-
-                            )
-                        })}
-                    </View>
-
-                    <View style={{
-                        marginTop: 5,
-                        flexDirection: 'row'
-                    }}>
-
-                        <View style={{
-                            flex: 1,
-                            paddingRight: 5
-                        }}>
-                            <MyInput keyboardType='number-pad' label="Budget" iconname="ribbon" onChangeText={x => {
-                                setKirim({
-                                    ...kirim,
-                                    budget: x
-                                })
-                            }} />
-
+                                )
+                            })}
                         </View>
-                        <View style={{
-                            flex: 1,
-                            paddingLeft: 5
-                        }}>
-                            <MyInput keyboardType='number-pad' label="Usia (tahun)" iconname="list" onChangeText={x => {
-                                setKirim({
-                                    ...kirim,
-                                    usia: x
-                                })
-                            }} />
-                        </View>
-                    </View>
-                    <MyInput label="Merek Sabun Muka" iconname="options" onChangeText={x => {
-                        setKirim({
-                            ...kirim,
-                            merk: x
-                        })
-                    }} />
-                    <MyGap jarak={20} />
+
+
+                        <MyGap jarak={20} />
 
 
 
-                    <MyButton onPress={createPDF} warna={colors.danger} title="Print Hasil Penilaian" Icons="print" />
-                </ScrollView>
+                        <MyButton onPress={createPDF} warna={colors.danger} title="Print Hasil Penilaian" Icons="print" />
 
-            </>}
 
+                    </>}
+                <MyGap jarak={20} />
+            </ScrollView>
             {loading && <View style={{
                 flex: 1,
                 justifyContent: 'center',
