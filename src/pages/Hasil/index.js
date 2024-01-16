@@ -62,7 +62,6 @@ export default function Hasil({ navigation, route }) {
 
 <p>Budget : ${new Intl.NumberFormat().format(kirim.budget)}</p>
 <p>Usia : ${kirim.usia} Tahun</p>
-<p>Merek Sabun Muka : ${kirim.merk}</p>
 
         <table width="100%" border="1" style="margin-top:5%;border-collapse:collapse" cellpadding="4">
             <tr style="background:#F2F6FC">
@@ -131,8 +130,27 @@ export default function Hasil({ navigation, route }) {
         axios.post(apiURL + 'perhitungan.php', {
             key: kirim.id_kategori
         }).then(res => {
-            console.log(res.data.data_hasil);
-            setSPK(res.data);
+            // console.log(res.data.data_hasil);
+            let tmp = [];
+            res.data.data_hasil.map((aa, index) => {
+
+                res.data.kriteria.filter(ii => ii.nama_kriteria == 'Harga').map(kk => {
+                    aa.harga = res.data.matriks_keputusan[aa.id_alternatif][kk.id_kriteria]['nama_subkriteria'];
+                    tmp.push(aa)
+                    // 
+                })
+
+
+            })
+            console.log(tmp)
+            setSPK({
+                alternatif: res.data.alternatif,
+                kriteria: res.data.kriteria,
+                matriks_keputusan: res.data.matriks_keputusan,
+                matriks_normalisasi: res.data.matriks_normalisasi,
+                matriks_hasil: res.data.matriks_hasil,
+                data_hasil: tmp,
+            });
         }).finally(() => {
             setLoading(false);
             setOpen(true)
@@ -187,12 +205,7 @@ export default function Hasil({ navigation, route }) {
                         }} />
                     </View>
                 </View>
-                <MyInput label="Merek Sabun Muka" iconname="options" onChangeText={x => {
-                    setKirim({
-                        ...kirim,
-                        merk: x
-                    })
-                }} />
+
 
                 {!open &&
 
@@ -257,7 +270,7 @@ export default function Hasil({ navigation, route }) {
                                 }}>Rangking</Text>
                             </View>
 
-                            {SPK.data_hasil.map((aa, index) => {
+                            {SPK.data_hasil.filter(ii => ii.harga <= parseFloat(kirim.budget * 1.5)).map((aa, index) => {
                                 return (
 
                                     <View style={{
@@ -305,14 +318,32 @@ export default function Hasil({ navigation, route }) {
                                             fontSize: 11,
                                             textAlign: 'center'
                                         }}>{parseFloat(aa.nilai_saw).toFixed(4)}</Text>
-                                        <Text style={{
+                                        <View style={{
                                             flex: 1,
-                                            fontFamily: fonts.secondary[800],
-                                            fontSize: 11,
-                                            textAlign: 'center'
-                                        }}>{index + 1}</Text>
+                                        }}>
+                                            <Text style={{
+
+                                                fontFamily: fonts.secondary[800],
+                                                fontSize: 11,
+                                                textAlign: 'center'
+                                            }}>{index + 1}</Text>
+
+                                            <Text style={{
+                                                textAlign: 'center',
+                                                fontFamily: fonts.secondary[400],
+                                                fontSize: 12
+                                            }}>{new Intl.NumberFormat().format(aa.harga)}</Text>
+
+
+
+
+
+                                        </View>
+
+
 
                                     </View>
+
 
 
                                 )
