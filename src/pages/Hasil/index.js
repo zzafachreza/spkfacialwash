@@ -216,8 +216,20 @@ export default function Hasil({ navigation, route }) {
                         <MyButton title="Lihat Hasil" Icons="search" onPress={__getPerhitungan} />
                     </>}
 
+                {!loading && open && SPK.data_hasil.filter(ii => ii.harga <= parseFloat(kirim.budget * 1.5)).length == 0 &&
 
-                {!loading && open &&
+                    <View style={{
+                        padding: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <Text style={{
+                            fontFamily: fonts.secondary[600]
+                        }}>Data tidak ditemukan !</Text>
+                    </View>
+
+                }
+                {!loading && open && SPK.data_hasil.filter(ii => ii.harga <= parseFloat(kirim.budget * 1.5)).length > 0 &&
 
 
                     <>
